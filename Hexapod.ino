@@ -25,7 +25,8 @@ int direction = 0;
 enum hexState {
   Stand,
   Walk,
-  Idle
+  Idle,
+  Moving
 };
 Vector3 currentPoints[6];
 Vector2 centerPoint;
@@ -78,8 +79,8 @@ void setup() {
 
 
 void loop() {
-  ch1Value = readChannel(CH1, -40, 40, 0); //x
-  ch2Value = readChannel(CH2, -40, 40, 0); //y
+  ch3Value = readChannel(CH3, -40, 40, 0); //x
+  ch4Value = readChannel(CH4, -40, 40, 0); //y
 switch (currentState) {
     case Stand:
       moveLeg(0, Vector3(0, 100, -90));
@@ -88,7 +89,6 @@ switch (currentState) {
       moveLeg(3, Vector3(0, 100, -90));
       moveLeg(4, Vector3(0, 100, -90));
       moveLeg(5, Vector3(0, 100, -90));
-      vectorApplied=0;
       break;
     case Idle:
       moveLeg(0, Vector3(0, 10, 0));
@@ -98,15 +98,14 @@ switch (currentState) {
       moveLeg(4, Vector3(0, 10, 0));
       moveLeg(5, Vector3(0, 10, 0));
       break;
-    case Walk:
-    bodyMovement(Vector2(ch2Value-centerPoint.x,ch1Value-centerPoint.y));
-    centerPoint=Vector2(ch2Value,ch1Value);
-    vectorApplied=0;
+    case Moving:
+    bodyMovement(Vector2(ch3Value-centerPoint.x,ch4Value-centerPoint.y));
+    centerPoint=Vector2(ch3Value,ch4Value);
     break;
   }
 
-  if(abs(ch1Value) >= 10 || abs(ch2Value) >= 10){
-    currentState=Walk;
+  if(abs(ch3Value) >= 10 || abs(ch4Value) >= 10){
+    currentState=Moving;
     timeSinceLastInput = millis();
     return;
   }
