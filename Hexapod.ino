@@ -28,6 +28,10 @@ enum hexState {
   Idle,
   Moving
 };
+enum Gait{
+Tripod,
+Crab  
+};
 Vector3 currentPoints[6];
 Vector2 centerPoint;
 int legs[6][3]{
@@ -49,6 +53,7 @@ int TL = 120;
 float idleTime;
 double timeSinceLastInput;
 hexState currentState=Stand;
+Gait currentGait;
 void setup() {
   Serial.begin(115200);
   pinMode(CH1, INPUT);
