@@ -28,9 +28,9 @@ enum hexState {
   Idle,
   Moving
 };
-enum Gait{
-Tripod,
-Crab  
+enum Gait {
+  Tripod,
+  Crab
 };
 Vector3 currentPoints[6];
 Vector2 centerPoint;
@@ -52,8 +52,8 @@ int FL = 80;
 int TL = 120;
 float idleTime;
 double timeSinceLastInput;
-hexState currentState=Stand;
-Gait currentGait;
+hexState currentState = Stand;
+Gait currentGait = Tripod;
 void setup() {
   Serial.begin(115200);
   pinMode(CH1, INPUT);
@@ -73,20 +73,23 @@ void setup() {
       Serial.println(200);
     }
   }*/
-      moveLeg(0, Vector3(0, 100, -90));
-      moveLeg(1, Vector3(0, 100, -90));
-      moveLeg(2, Vector3(0, 100, -90));
-      moveLeg(3, Vector3(0, 100, -90));
-      moveLeg(4, Vector3(0, 100, -90));
-      moveLeg(5, Vector3(0, 100, -90));
+  moveLeg(0, Vector3(0, 100, -90));
+  moveLeg(1, Vector3(0, 100, -90));
+  moveLeg(2, Vector3(0, 100, -90));
+  moveLeg(3, Vector3(0, 100, -90));
+  moveLeg(4, Vector3(0, 100, -90));
+  moveLeg(5, Vector3(0, 100, -90));
 }
 
 
 
 void loop() {
-  ch3Value = readChannel(CH3, -40, 40, 0); //x
-  ch4Value = readChannel(CH4, -40, 40, 0); //y
-switch (currentState) {
+  ch1Value = readChannel(CH1, -50, 50, 0);
+  ch2Value = readChannel(CH2, -50, 50, 0);
+  ch3Value = readChannel(CH3, -40, 40, 0);  //x
+  ch4Value = readChannel(CH4, -40, 40, 0);  //y
+ // walk(Vector2(20,0));
+  switch (currentState) {
     case Stand:
       moveLeg(0, Vector3(0, 100, -90));
       moveLeg(1, Vector3(0, 100, -90));
@@ -104,21 +107,27 @@ switch (currentState) {
       moveLeg(5, Vector3(0, 10, 0));
       break;
     case Moving:
-    bodyMovement(Vector2(ch3Value-centerPoint.x,ch4Value-centerPoint.y));
-    centerPoint=Vector2(ch3Value,ch4Value);
-    break;
+      bodyMovement(Vector2(ch3Value - centerPoint.x, ch4Value - centerPoint.y));
+      centerPoint = Vector2(ch3Value, ch4Value);
+      break;
+    case Walk:
+      walk(Vector2(ch1Value - centerPoint.x, ch4Value - centerPoint.y));
+      break;
   }
-
-  if(abs(ch3Value) >= 10 || abs(ch4Value) >= 10){
-    currentState=Moving;
+  if (abs(ch1Value) >= 10 || abs(ch4Value) >= 10) {
+    currentState = Walk;
+    timeSinceLastInput = millis();
+  }
+  if (abs(ch3Value) >= 10 || abs(ch4Value) >= 10) {
+    currentState = Moving;
     timeSinceLastInput = millis();
     return;
   }
 
-  if(abs(timeSinceLastInput - millis()) > 5) {
-    currentState=Stand;
+  if (abs(timeSinceLastInput - millis()) > 5) {
+    currentState = Stand;
     return;
-  } 
+  }
 }
 void moveLeg(int legNumber, Vector3 pos) {
   int time = 150;  //POG time
