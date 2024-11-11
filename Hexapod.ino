@@ -1,6 +1,6 @@
 #include <math.h>
 #include "vectors.h"
-
+#include "helpers.h"
 // Define Input Connections
 #define CH1 3
 #define CH2 5
