@@ -36,10 +36,48 @@ void bodyMovement(Vector2 change) {
     moveLeg(legNumber, Vector3(x, y, z));
   }
 }
-void walk(Vector2 center) {
+void walk(Vector3 move) {
+int zMax =-50;
+int zMin =-90;
   switch (currentGait) {
     case Tripod:
+/*
+Step Phase 0:
+legs 0,2,4 move step forward with a curve 
+legs 1,3,5 slide back
+Step Phase 1:
+legs 0,2,4 move step forward with a curve 
+legs 1,3,5 slide back
+
+moving in a curve 
+currentx 
+
+*/
+
+    bool stepPhase=0;
+    switch(stepPhase){
+      case 0: 
+      float x2;
+      float y2;
+     if (vectorApplied==0){
+     x2 =(currentPoints[1].x+move.x)/2;
+     y2 =(currentPoints[1].y+move.y)/2;
+     vectorApplied=1;
+     }
+     Vector3 points[3]{currentPoints[1],Vector3(x2,y2,zMax),move};
+     for(int i=1;i<6;i++){
+      moveLeg(1,pointOnCurve(points,i/5,3));
+     }
+      break;
+      case 1:
+     Vector3 points2[2]{move,Vector3(-move.x,move.y,move.z)};
+     for(int i=1;i<6;i++){
+      moveLeg(1,pointOnCurve(points2,i/5,3));
+     }
+      break;
+    }
 // Yo bezier curves might do job 
+
       break;
     case Crab:
       break;

@@ -22,11 +22,12 @@ bool ch6Value;
 bool vectorApplied;
 int direction = 0;
 
+
 enum hexState {
   Stand,
   Walk,
   Idle,
-  Moving
+  Leaning
 };
 enum Gait {
   Tripod,
@@ -88,7 +89,6 @@ void loop() {
   ch2Value = readChannel(CH2, -50, 50, 0);
   ch3Value = readChannel(CH3, -40, 40, 0);  //x
   ch4Value = readChannel(CH4, -40, 40, 0);  //y
- // walk(Vector2(20,0));
   switch (currentState) {
     case Stand:
       moveLeg(0, Vector3(0, 100, -90));
@@ -106,20 +106,20 @@ void loop() {
       moveLeg(4, Vector3(0, 10, 0));
       moveLeg(5, Vector3(0, 10, 0));
       break;
-    case Moving:
+    case Leaning:
       bodyMovement(Vector2(ch3Value - centerPoint.x, ch4Value - centerPoint.y));
       centerPoint = Vector2(ch3Value, ch4Value);
       break;
     case Walk:
-      walk(Vector2(ch1Value - centerPoint.x, ch4Value - centerPoint.y));
+      walk(Vector3(50, 0, -90));
       break;
   }
-  if (abs(ch1Value) >= 10 || abs(ch4Value) >= 10) {
+  if (abs(ch1Value) >= 10 || abs(ch2Value) >= 10) {
     currentState = Walk;
     timeSinceLastInput = millis();
   }
   if (abs(ch3Value) >= 10 || abs(ch4Value) >= 10) {
-    currentState = Moving;
+    currentState = Leaning;
     timeSinceLastInput = millis();
     return;
   }
