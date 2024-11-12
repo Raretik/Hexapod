@@ -1,6 +1,6 @@
 #include <math.h>
 #include "vectors.h"
-#include "helpers.h"
+
 // Define Input Connections
 #define CH1 3
 #define CH2 5
@@ -85,6 +85,7 @@ void setup() {
 
 
 void loop() {
+  currentState=Walk;
   ch1Value = readChannel(CH1, -50, 50, 0);
   ch2Value = readChannel(CH2, -50, 50, 0);
   ch3Value = readChannel(CH3, -40, 40, 0);  //x
@@ -111,7 +112,7 @@ void loop() {
       centerPoint = Vector2(ch3Value, ch4Value);
       break;
     case Walk:
-      walk(Vector3(50, 0, -90));
+      walk(Vector3(50, 100, -90));
       break;
   }
   if (abs(ch1Value) >= 10 || abs(ch2Value) >= 10) {
