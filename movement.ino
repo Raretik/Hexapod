@@ -66,20 +66,21 @@ currentx
           Serial.print("y2=");
           Serial.println(y2);
           Vector3 points[3]{ currentPoints[1], Vector3(x2, y2, zMax), move };
+          float t = 0;
           for (int i = 1; i < 6; i++) {
-            float t = 0;
             Serial.println(t);
             moveLeg(1, pointOnCurve(points, t, 3));
             t += 0.2;
           }
+
           stepPhase = 1;
           break;
         case 1:
           Vector3 points2[2]{ move, Vector3(-move.x, move.y, move.z) };
+          t = 0;
           for (int i = 1; i < 6; i++) {
-            float t = 0;
             Serial.println(i);
-            moveLeg(1, pointOnCurve(points2, t, 3));
+            moveLeg(1, pointOnCurve(points2, t, 2));
             t += 0.2;
           }
           stepPhase = 0;
