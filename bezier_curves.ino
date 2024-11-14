@@ -1,6 +1,6 @@
 Vector2 pointOnCurve(Vector2* iniPoints, float t, int numPoints) {
   Vector2 pos;
-  for (int i=0; i < numPoints; i++) {
+  for (int i = 0; i < numPoints; i++) {
     float b = binomialCoefficient(numPoints - 1, i) * pow(1 - t, numPoints - 1 - i) * pow(t, i);
     pos.x += b * iniPoints[i].x;
     pos.y += b * iniPoints[i].y;
@@ -13,9 +13,9 @@ Vector2 pointOnCurve(Vector2* iniPoints, float t, int numPoints) {
   }
   return pos;
 }
-Vector3 pointOnCurve(Vector3 iniPoints[3], float t, int numPoints) {
+Vector3 pointOnCurve(Vector3* iniPoints, float t, int numPoints) {
   Vector3 pos;
-  for (int i=0; i < numPoints; i++) {
+  for (int i = 0; i < numPoints; i++) {
     float b = binomialCoefficient(numPoints - 1, i) * pow(1 - t, numPoints - 1 - i) * pow(t, i);
     pos.x += b * iniPoints[i].x;
     pos.y += b * iniPoints[i].y;

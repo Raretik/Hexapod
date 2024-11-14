@@ -57,7 +57,7 @@ public:
     // Translate point back to original position
     x = x_rotated + pivot.x;
     y = y_rotated + pivot.y;
-    return Vector2(x,y);
+    return Vector2(x, y);
   }
 };
 
@@ -88,23 +88,23 @@ public:
   }
 
   Vector3 operator*(float val) {
-    return Vector3(x*val, y*val, z*val);
+    return Vector3(x * val, y * val, z * val);
   }
 
   Vector3 operator*(Vector3 val) {
-    return Vector3(x*val.x, y*val.y, z*val.z);
+    return Vector3(x * val.x, y * val.y, z * val.z);
   }
 
   Vector3 operator/(Vector3 val) {
-    return Vector3(x/val.x, y/val.y, z/val.z);
+    return Vector3(x / val.x, y / val.y, z / val.z);
   }
 
   Vector3 operator/(float val) {
-    return Vector3(x/val, y/val, z/val);
+    return Vector3(x / val, y / val, z / val);
   }
 
   Vector3 operator+(Vector3 val) {
-    return Vector3(x+val.x, y+val.y, z+val.z);
+    return Vector3(x + val.x, y + val.y, z + val.z);
   }
 
   String toString() {
@@ -118,7 +118,7 @@ public:
 
   Vector3 rotate(int angle, Vector2 pivot) {
     // Translate line so pivot point is at the origin
-    if(angle == 0) return Vector3(x,y,z);
+    if (angle == 0) return Vector3(x, y, z);
 
     x -= pivot.x;
     y -= pivot.y;
@@ -132,15 +132,13 @@ public:
     x = x_rotated + pivot.x;
     y = y_rotated + pivot.y;
 
-    return Vector3(x,y,z);
+    return Vector3(x, y, z);
   }
 
-  float distanceTo(Vector3 v){
+  float distanceTo(Vector3 v) {
     double dx = v.x - x;
     double dy = v.y - y;
     double dz = v.z - z;
-    return sqrt(dx*dx + dy*dy + dz*dz);
+    return sqrt(dx * dx + dy * dy + dz * dz);
   }
 };
-
-

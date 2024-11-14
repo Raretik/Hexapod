@@ -37,7 +37,7 @@ void bodyMovement(Vector2 change) {
   }
 }
 void walk(Vector3 move) {
-  int zMax = -50;
+  int zMax = 0;
   int zMin = -90;
   switch (currentGait) {
     case Tripod:
@@ -75,9 +75,8 @@ currentx
             Serial.println(curvePoint.z);*/
             moveLeg(1, pointOnCurve(points, t, 3));
             t += 0.2;
+            if (i == 5) stepPhase = 1;
           }
-
-          stepPhase = 1;
           break;
         case 1:
           Vector3 points2[2]{ move, Vector3(-move.x, move.y, move.z) };
@@ -87,8 +86,8 @@ currentx
             Vector3 curvePoint = pointOnCurve(points2, t, 2);
             moveLeg(1, curvePoint);
             t += 0.2;
+            if (i == 5) stepPhase = 0;
           }
-          stepPhase = 0;
           break;
       }
       // Yo bezier curves might do job
