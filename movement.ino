@@ -61,14 +61,18 @@ currentx
           float y2;
           x2 = (currentPoints[1].x + move.x) / 2;
           y2 = currentPoints[1].y;
-          Serial.print("x2=");
+          /*Serial.print("x2=");
           Serial.println(x2);
           Serial.print("y2=");
-          Serial.println(y2);
+          Serial.println(y2);*/
           Vector3 points[3]{ currentPoints[1], Vector3(x2, y2, zMax), move };
           float t = 0;
           for (int i = 1; i < 6; i++) {
-            Serial.println(t);
+            //Serial.println(t);
+            Vector3 curvePoint = pointOnCurve(points, t, 2);
+            /*Serial.print(curvePoint.x);
+            Serial.print(curvePoint.y);
+            Serial.println(curvePoint.z);*/
             moveLeg(1, pointOnCurve(points, t, 3));
             t += 0.2;
           }
@@ -79,8 +83,9 @@ currentx
           Vector3 points2[2]{ move, Vector3(-move.x, move.y, move.z) };
           t = 0;
           for (int i = 1; i < 6; i++) {
-            Serial.println(i);
-            moveLeg(1, pointOnCurve(points2, t, 2));
+            // Serial.println(i);
+            Vector3 curvePoint = pointOnCurve(points2, t, 2);
+            moveLeg(1, curvePoint);
             t += 0.2;
           }
           stepPhase = 0;

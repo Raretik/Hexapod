@@ -85,7 +85,7 @@ void setup() {
 
 
 void loop() {
-  currentState=Walk;
+  //currentState=Walk;
   ch1Value = readChannel(CH1, -50, 50, 0);
   ch2Value = readChannel(CH2, -50, 50, 0);
   ch3Value = readChannel(CH3, -40, 40, 0);  //x
