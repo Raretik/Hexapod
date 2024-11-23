@@ -27,7 +27,8 @@ enum hexState {
   Stand,
   Walk,
   Idle,
-  Leaning
+  Leaning,
+  TyranoidOrbitoid
 };
 enum Gait {
   Tripod,
