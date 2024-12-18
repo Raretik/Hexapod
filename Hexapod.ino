@@ -19,7 +19,7 @@ int ch4Value;
 bool ch5Value;
 bool ch6Value;
 
-bool vectorApplied;
+bool stepPhase = 0;
 int direction = 0;
 
 
@@ -36,6 +36,8 @@ enum Gait {
 };
 Vector3 currentPoints[6];
 Vector2 centerPoint;
+Vector3 centerPointWalk;
+
 int legs[6][3]{
   { 23, 22, 21 },  //Leg1; Coxa, Fermur, Tibia
   { 27, 26, 25 },  //Leg2
@@ -64,23 +66,6 @@ void setup() {
   pinMode(CH4, INPUT);
   pinMode(CH5, INPUT);
   pinMode(CH6, INPUT);
-  /*  for (int i = 0; i < 7; i++) {
-    for (int j = 0; j < 4; j++) {
-      
-      Serial.print("#");
-      Serial.print(legs[i][j]);
-      Serial.print(" P");
-      Serial.print(1500);
-      Serial.print(" T");
-      Serial.println(200);
-    }
-  }*/
-  moveLeg(0, Vector3(0, 100, -90));
-  moveLeg(1, Vector3(0, 100, -90));
-  moveLeg(2, Vector3(0, 100, -90));
-  moveLeg(3, Vector3(0, 100, -90));
-  moveLeg(4, Vector3(0, 100, -90));
-  moveLeg(5, Vector3(0, 100, -90));
 }
 
 
@@ -113,7 +98,8 @@ void loop() {
       centerPoint = Vector2(ch3Value, ch4Value);
       break;
     case Walk:
-      walk(Vector3(50, 100, -90));
+      walk(Vector3(ch1Value - centerPointWalk.x, ch2Value - centerPointWalk.y, -90));
+      centerPointWalk = Vector3(ch1Value, ch2Value, -90);
       break;
   }
   if (abs(ch1Value) >= 10 || abs(ch2Value) >= 10) {

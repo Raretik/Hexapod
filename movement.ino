@@ -52,45 +52,28 @@ legs 1,3,5 slide back
 moving in a curve 
 currentx 
 
+Current points+Vector(move)
 */
-
-      bool stepPhase = 0;
-      switch (stepPhase) {
-        case 0:
-          float x2;
-          float y2;
-          x2 = (currentPoints[1].x + move.x) / 2;
-          y2 = currentPoints[1].y;
-          /*Serial.print("x2=");
-          Serial.println(x2);
-          Serial.print("y2=");
-          Serial.println(y2);*/
-          Vector3 points[3]{ currentPoints[1], Vector3(x2, y2, zMax), move };
-          float t = 0;
-          for (int i = 1; i < 6; i++) {
-            //Serial.println(t);
-            Vector3 curvePoint = pointOnCurve(points, t, 2);
-            /*Serial.print(curvePoint.x);
-            Serial.print(curvePoint.y);
-            Serial.println(curvePoint.z);*/
-            moveLeg(1, pointOnCurve(points, t, 3));
-            t += 0.2;
-            if (i == 5) stepPhase = 1;
-          }
-          break;
-        case 1:
-          Vector3 points2[2]{ move, Vector3(-move.x, move.y, move.z) };
-          t = 0;
-          for (int i = 1; i < 6; i++) {
-            // Serial.println(i);
-            Vector3 curvePoint = pointOnCurve(points2, t, 2);
-            moveLeg(1, curvePoint);
-            t += 0.2;
-            if (i == 5) stepPhase = 0;
-          }
-          break;
+      float x2 = 0;
+      float y2 = 0;
+      x2 = (currentPoints[1].x + move.x) / 2;
+      y2 = (currentPoints[1].y + move.y) / 2;
+      Vector3 movePoints=currentPoints[1]+move;
+      Vector3 points[3]{ currentPoints[1], Vector3(x2, y2, zMax), movePoints};
+      float t = 0;
+      for (int i = 1; i < 6; i++) {
+        moveLeg(1, pointOnCurve(points, t, 3));
+        t += 0.2;
       }
-      // Yo bezier curves might do job
+      stepPhase = 1;
+
+      Vector3 points2[2]{ movePoints, Vector3(-movePoints.x, movePoints.y, movePoints.z) };
+      t = 0;
+      for (int i = 1; i < 6; i++) {
+        moveLeg(1, pointOnCurve(points2, t, 2));
+        t += 0.2;
+      }
+      stepPhase = 0;
 
       break;
     case Crab:
