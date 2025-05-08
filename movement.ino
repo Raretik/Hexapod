@@ -36,9 +36,10 @@ void bodyMovement(Vector2 change) {
     moveLeg(legNumber, Vector3(x, y, z));
   }
 }
-void walk(Vector3 move) {
+void walk(Vector2 move) {
   int zMax = 0;
   int zMin = -90;
+  float t = 0;
   switch (currentGait) {
     case Tripod:
       /*
@@ -50,27 +51,23 @@ legs 0,2,4 move step forward with a curve
 legs 1,3,5 slide back
 
 moving in a curve 
-currentx 
-
-Current points+Vector(move)
+Point1:current Point
+Point2:half of the move but at highest point
+Point3:Current point+Vector(move)
 */
-      float x2 = 0;
-      float y2 = 0;
-      x2 = (currentPoints[1].x + move.x) / 2;
-      y2 = (currentPoints[1].y + move.y) / 2;
-      Vector3 movePoints=currentPoints[1]+move;
-      Vector3 points[3]{ currentPoints[1], Vector3(x2, y2, zMax), movePoints};
-      float t = 0;
+
+      Vector3 Point1 = currentPoints[1];
+      Vector3 Point2 = Vector3(currentPoints[1].x+((1/2)*(move.x)),currentPoints[1].y+((1/2)*(move.y)),zMax);
+      Vector3 Point3 = Vector3(currentPoints[1].x+move.x,currentPoints[1].y+move.y,zMin);
+      Vector3 movePoints[3]{Point1,Point2,Point3};
       for (int i = 1; i < 6; i++) {
-        moveLeg(1, pointOnCurve(points, t, 3));
+        moveLeg(1, pointOnCurve(movePoints, t, 3));
         t += 0.2;
       }
       stepPhase = 1;
-
-      Vector3 points2[2]{ movePoints, Vector3(-movePoints.x, movePoints.y, movePoints.z) };
       t = 0;
       for (int i = 1; i < 6; i++) {
-        moveLeg(1, pointOnCurve(points2, t, 2));
+        moveLeg(1, pointOnCurve(movePoints, t, 2));
         t += 0.2;
       }
       stepPhase = 0;

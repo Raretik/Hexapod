@@ -98,13 +98,14 @@ void loop() {
       centerPoint = Vector2(ch3Value, ch4Value);
       break;
     case Walk:
-      walk(Vector3(ch1Value - centerPointWalk.x, ch2Value - centerPointWalk.y, -90));
-      centerPointWalk = Vector3(ch1Value, ch2Value, -90);
+      walk(Vector2(ch1Value - centerPoint.x, ch2Value - centerPoint.y));
+      centerPoint = Vector2(ch1Value, ch2Value);
       break;
   }
   if (abs(ch1Value) >= 10 || abs(ch2Value) >= 10) {
     currentState = Walk;
     timeSinceLastInput = millis();
+    return;
   }
   if (abs(ch3Value) >= 10 || abs(ch4Value) >= 10) {
     currentState = Leaning;
@@ -114,6 +115,10 @@ void loop() {
 
   if (abs(timeSinceLastInput - millis()) > 5) {
     currentState = Stand;
+    return;
+  }
+  if (abs(timeSinceLastInput - millis()) > 10000) {
+    currentState = Idle;
     return;
   }
 }
