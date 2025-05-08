@@ -21,7 +21,8 @@ bool ch6Value;
 
 bool stepPhase = 0;
 int direction = 0;
-
+int zMax = 90;
+int zMin = -90;
 
 enum hexState {
   Stand,
@@ -34,9 +35,19 @@ enum Gait {
   Tripod,
   Crab
 };
+Vector3 standPos = Vector3(0, 100, -90);
 Vector3 currentPoints[6];
 Vector2 centerPoint;
 Vector3 centerPointWalk;
+
+Vector3 curves[5][3];
+
+Vector3 Point1;
+Vector3 Point2;
+Vector3 Point3;
+Vector3 Point4;
+Vector3 Point5;
+
 
 int legs[6][3]{
   { 23, 22, 21 },  //Leg1; Coxa, Fermur, Tibia
@@ -78,12 +89,7 @@ void loop() {
   ch4Value = readChannel(CH4, -40, 40, 0);  //y
   switch (currentState) {
     case Stand:
-      moveLeg(0, Vector3(0, 100, -90));
-      moveLeg(1, Vector3(0, 100, -90));
-      moveLeg(2, Vector3(0, 100, -90));
-      moveLeg(3, Vector3(0, 100, -90));
-      moveLeg(4, Vector3(0, 100, -90));
-      moveLeg(5, Vector3(0, 100, -90));
+      for (int i = 0; i < 6; i++)  moveLeg(i, standPos); 
       break;
     case Idle:
       moveLeg(0, Vector3(0, 10, 0));
@@ -98,8 +104,9 @@ void loop() {
       centerPoint = Vector2(ch3Value, ch4Value);
       break;
     case Walk:
-      walk(Vector2(ch1Value - centerPoint.x, ch2Value - centerPoint.y));
-      centerPoint = Vector2(ch1Value, ch2Value);
+      //walk(Vector2(ch1Value - centerPoint.x, ch2Value - centerPoint.y));
+      //centerPoint = Vector2(ch1Value, ch2Value);
+      walk(Vector2 (50,0));
       break;
   }
   if (abs(ch1Value) >= 10 || abs(ch2Value) >= 10) {
@@ -113,14 +120,14 @@ void loop() {
     return;
   }
 
-  if (abs(timeSinceLastInput - millis()) > 5) {
+  /* if (abs(timeSinceLastInput - millis()) > 5) {
     currentState = Stand;
     return;
   }
   if (abs(timeSinceLastInput - millis()) > 10000) {
     currentState = Idle;
     return;
-  }
+  }*/
 }
 void moveLeg(int legNumber, Vector3 pos) {
   int time = 150;  //POG time

@@ -37,9 +37,6 @@ void bodyMovement(Vector2 change) {
   }
 }
 void walk(Vector2 move) {
-  int zMax = 0;
-  int zMin = -90;
-  float t = 0;
   switch (currentGait) {
     case Tripod:
       /*
@@ -52,28 +49,56 @@ legs 1,3,5 slide back
 
 moving in a curve 
 Point1:current Point
-Point2:half of the move but at highest point
-Point3:Current point+Vector(move)
+Point2:middle point betweem 1 and 3 at the highest possible position
+Point3:standPos moved by move
+Point4:reverse of 3
+Point5:standPos but in the air
 */
-
-      Vector3 Point1 = currentPoints[1];
-      Vector3 Point2 = Vector3(currentPoints[1].x+((1/2)*(move.x)),currentPoints[1].y+((1/2)*(move.y)),zMax);
-      Vector3 Point3 = Vector3(currentPoints[1].x+move.x,currentPoints[1].y+move.y,zMin);
-      Vector3 movePoints[3]{Point1,Point2,Point3};
-      for (int i = 1; i < 6; i++) {
-        moveLeg(1, pointOnCurve(movePoints, t, 3));
-        t += 0.2;
+      /*1->2->3->4->5->3...
+curve1(1-2-3)
+curve2(3-4)
+curve3(4-5-3)
+*/
+      if (bool firstTime = 0; firstTime == 0) {
+        firstTime = 1;
+        float t = 0;
+        Point1 = currentPoints[1];
+        Point2 = Vector3(currentPoints[1].x + (0.5 * abs((standPos.x + move.x) - currentPoints[1].x)), currentPoints[1].y + (0.5 * abs((standPos.x + move.x) - currentPoints[1].x)), zMax);
+        Point3 = Vector3(standPos.x + move.x, standPos.y + move.y, zMin);
+        Point4 = Vector3(standPos.x - move.x, standPos.y - move.y, zMin);
+        Point5 = Vector3(standPos.x, standPos.y, zMax);
+        for (int i = 0; i < 6; i++) {
+          Vector3 movePoints1[3]{ Point1, Point2, Point3 };
+          Vector3 movePoints2[3]{ Point3, Point4 };
+          Vector3 movePoints3[3]{ Point4, Point5, Point3 };
+          curves[i][0] = pointOnCurve(movePoints1, t, 3);
+          curves[i][1] = pointOnCurve(movePoints2, t, 2);
+          curves[i][2] = pointOnCurve(movePoints3, t, 3);
+          t += 0.2;
+        }
       }
-      stepPhase = 1;
-      t = 0;
-      for (int i = 1; i < 6; i++) {
-        moveLeg(1, pointOnCurve(movePoints, t, 2));
-        t += 0.2;
-      }
-      stepPhase = 0;
+      switch (stepPhase) {
+        case 0:
+          for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 5; j++) {
+              moveLeg(1, curves[j][i]);
+              delay(100);
+            }
+          }
+          stepPhase = 1;
+          break;
+        case 1:
+          for (int i = 1; i < 3; i++) {
+            for (int j = 0; j < 5; j++) {
+              moveLeg(1, curves[j][i]);
+              delay(100);
+            }
+          }
+            break;
+          }
 
-      break;
-    case Crab:
-      break;
+          break;
+        case Crab:
+          break;
+      }
   }
-}
